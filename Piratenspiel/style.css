@@ -18,3 +18,10 @@
     object-fit: cover;
     border: solid black 2px;
 }
+
+.button {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    border-radius: 10px;
+}
