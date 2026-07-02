@@ -31,11 +31,21 @@ function checkKey(e) {
       rightArrow = true; // Und right Aroow auf true
    }
    else if (e.keyCode == '70') { // 'F' Taste
-      if (!attacking) {
-         attacking = true;
-      }
+      startAttack();
    }
 }
+
+
+function startAttack() {
+   attacking = true;
+ const bullet = document.createElement('img'); // <img>
+      bullet.classList.add('bullet'); // <img class="bullet">
+      bullet.src = 'img/bullet.png'; /*
+      <img class="bullet" src="img/bullet.png"> */
+      document.body.appendChild(bullet); // Wird in den body geaddet
+
+}
+
 function unCheckKey(e) {
    e = e || window.event;
 
@@ -48,19 +58,21 @@ function unCheckKey(e) {
 }
 
 function updateGame() {
-   currentBackground.style.objectPosition = `${-left}px`; /* lässt den Hintergrund
-   mit left verschieben */
+   currentBackground.style.left = `${-left}px`;
+   currentBackground2.style.left = `${-(left - 1684)}px`; // Hintendran gesetzt
+   currentBackground3.style.left = `${-(left - 1684 * 2)}px`; // Das gleiche wieder
 
    // Update enemy positions to stay fixed on background
    enemies.forEach(enemy => {
-      enemy.initialX -= 1; // The enemies move now
+      enemy.initialX -= 0.5; // The enemies move now
       enemy.element.style.left = `${enemy.initialX - left}px`;
+      frame: 0
    });
 
-   if (leftArrow) {
+   if (leftArrow && left > 0) {
       left -= 5; // Wenn leftArrow gedrückt, dann left -5
    }
-   if (rightArrow) {
+   if (rightArrow && left < 3175) {
       left += 5; // Wenn rightArrow gedrückt, dann left + 5
    }
    if (attacking) {
@@ -74,12 +86,22 @@ function updateGame() {
    }
 }
 
-enemies.forEach(enemy => {
-   enemy.element.src = `img/Gegner/Minotaur_01/Walking/Minotaur_01_Walking_00${frame}.png`; /* Geht alle Gegner durch
-   und changed den Frame für jeden */
-});
-
 function moveCharacterAndEnemies() {
+
+   enemies.forEach(enemy => {
+      if (enemy.frame < 10) {
+         enemy.element.src = `img/Gegner/Minotaur_01/Walking/Minotaur_01_Walking_00${enemy.frame}.png`;
+      }
+      /* Geht alle Gegner durch und changed den Frame für jeden */
+      else {
+         enemy.element.src = `img/Gegner/Minotaur_01/Walking/Minotaur_01_Walking_0${enemy.frame}.png`;
+      }
+      enemy.frame++;
+      if (enemy.frame == 17) {
+         enemy.frame = 0;
+      }
+   });
+
    pirate.src = `img/2/2_entity_000_${state}_00${frame}.png`;
    /* ruft das Image auf mit der Variable state und setzt die
    Bilder Nummer auf frame */
@@ -108,7 +130,8 @@ function createEnemies() {
       // Store enemy's position
       enemies.push({
          element: enemy,
-         initialX: 500 + i * 300
+         initialX: 500 + i * 300,
+         frame: i
       });
    }
 }
