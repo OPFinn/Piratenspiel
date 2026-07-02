@@ -17,9 +17,11 @@ body {
     height: 200px;
     bottom: 70px;
     left: 200px;
-    width: 200px;
+    width: 150px;
     object-fit: cover;
-    /*  border: solid black 2px; */
+    z-index: 1;
+    /* border: solid black 2px; */
+    object-position: -27px;
 }
 
 .button {
@@ -32,7 +34,7 @@ body {
 .enemy {
     position: absolute;
     bottom: 100px;
-    left: 500px;
+    left: 1000px;
     height: 100px;
     /* border: 5px solid black; */
     width: 100px;
