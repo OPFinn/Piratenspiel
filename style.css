@@ -10,6 +10,7 @@ body {
     top: 0;
     height: 100%;
     object-fit: cover;
+    pointer-events: none; /*empfaengt keine Mausklicks */
 }
 
 .character {
@@ -24,11 +25,20 @@ body {
     object-position: -27px;
 }
 
-.button {
+.musicButton {
     position: absolute;
-    top: 2px;
-    left: 2px;
+    top: 5px;
+    left: 5px;
     border-radius: 10px;
+    background-color: dodgerblue;
+    Border: none;
+    color: black;
+    font-weight: 600;
+    z-index: 2;
+}
+
+#off {
+left: 80px;
 }
 
 .enemy {

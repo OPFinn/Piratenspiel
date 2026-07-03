@@ -4,7 +4,12 @@ let left = 100;
 let leftArrow = false;
 let rightArrow = false;
 let attacking = false; // Gibt an, ob der Angriff gerade stattfindet
-
+let music = false;
+let backgroundMusic = new Audio('sounds/Background_music.mp3');
+let hitSound = new Audio('sounds/hit_sound.MP3');
+let shotSound = new Audio('sounds/shot_sound.mp3');
+shotSound.volume = 0.2;
+let walkSound = new Audio('sounds/Walk_sound.mp3');
 const enemies = []; //Array 
 const enemyCount = 10; // Anzahl der enemies
 const bullets = []; //Array 
@@ -43,6 +48,8 @@ function startAttack() {
    attacking = true;
 
    setTimeout(function () {
+      shotSound.currentTime = 0;
+      shotSound.play(); //Sound
       const bullet = document.createElement('img'); // <img>
       bullet.classList.add('bullet'); // <img class="bullet">
       bullet.src = 'img/bullet.png'; /*
@@ -55,6 +62,16 @@ function startAttack() {
       });
    }, 220)
 
+}
+
+function backgroundMusicChange() {
+   if (music === true) {
+      backgroundMusic.play();
+   }
+   else if (music === false) {
+      backgroundMusic.pause();
+      backgroundMusic.currentTime = 0;
+   }
 }
 
 function unCheckKey(e) {
@@ -166,6 +183,8 @@ function checkCollisions() {
                bulletRect.bottom > enemyRect.top
             ) {
                // Treffer
+               hitSound.currentTime = 0;
+               hitSound.play(); //Sound
                enemy.hit = true; // Gegner als getroffen markieren
                enemy.frame = 5; // Animation von vorne beginnen 
 
