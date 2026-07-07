@@ -10,8 +10,9 @@ let hitSound = new Audio('sounds/hit_sound.MP3');
 let shotSound = new Audio('sounds/shot_sound.mp3');
 shotSound.volume = 0.2;
 let walkSound = new Audio('sounds/Walk_sound.mp3');
+let gameOverSound = new Audio('sounds/gameOver_sound.mp3');
 const enemies = []; //Array 
-const enemyCount = 10; // Anzahl der enemies
+const enemyCount = 70; // Anzahl der enemies
 const bullets = []; //Array 
 
 setInterval(moveCharacterAndEnemies, 75); //Alle 75 Millisek. wiederholen
@@ -23,7 +24,7 @@ document.onkeyup = unCheckKey; // Wenn losgelassen
 createEnemies();
 
 function checkKey(e) {
-
+if(state !== 'DIE'){
    e = e || window.event;
 
    if (e.keyCode == '37') {
@@ -42,7 +43,7 @@ function checkKey(e) {
       startAttack();
    }
 }
-
+}
 
 function startAttack() {
    attacking = true;
@@ -74,6 +75,10 @@ function backgroundMusicChange() {
    }
 }
 
+function pageReload(){
+   window.location.reload();
+}
+
 function unCheckKey(e) {
    e = e || window.event;
 
@@ -88,8 +93,8 @@ function unCheckKey(e) {
 function updateGame() {
    if (state !== 'DIE') {
       currentBackground.style.left = `${-left}px`;
-      currentBackground2.style.left = `${-(left - 1684)}px`; // Hintendran gesetzt
-      currentBackground3.style.left = `${-(left - 1684 * 2)}px`; // Das gleiche wieder
+      currentBackground2.style.left = `${-(left - currentBackground.width)}px`; // Hintendran gesetzt
+      currentBackground3.style.left = `${-(left - currentBackground.width * 2)}px`; // Das gleiche wieder
 
       // Update the enemy positions 
       enemies.forEach(enemy => {
@@ -153,17 +158,19 @@ function moveCharacterAndEnemies() {
 function createEnemies() {
    for (let i = 0; i < enemyCount; i++) // Wird so oft ausgeführt wie enemyCount groß ist
    {
+      const enemyType = Math.floor(Math.random() * 3) + 1;
       const enemy = document.createElement('img'); // <img>
       enemy.classList.add('enemy'); // <img class="enemy">
-      enemy.src = 'img/Gegner/Minotaur_01/Walking/Minotaur_01_Walking_000.png'; /*
-      <img class="enemy" src="img/Gegner/Minotaur_01/Walking/Minotaur_01_Walking_000.png"> */
+      enemy.src = `img/Gegner_${enemyType}/Walking/Minotaur_0${enemyType}_Walking_000.png`; /*
+      <img class="enemy" src="img/Gegner_1/Minotaur_01/Walking/Minotaur_01_Walking_000.png"> */
       document.getElementById('enemiesContainer').appendChild(enemy); // Wird in den Container geaddet
 
       // Store enemy's position
       enemies.push({
          element: enemy,
-         initialX: 1000 + i * 300,
-         frame: i
+         initialX: 1000 + i * 300 * Math.random(),
+         frame: i % 17,
+         type: enemyType
       });
    }
 }
@@ -202,9 +209,9 @@ function updateEnemies() {
       if (enemy.hit) {
          // Dying Animation
          if (enemy.frame < 10) {
-            enemy.element.src = `img/Gegner/Minotaur_01/Dying/Minotaur_01_Dying_00${enemy.frame}.png`;
+            enemy.element.src = `img/Gegner_${enemy.type}/Dying/Minotaur_0${enemy.type}_Dying_00${enemy.frame}.png`;
          } else {
-            enemy.element.src = `img/Gegner/Minotaur_01/Dying/Minotaur_01_Dying_0${enemy.frame}.png`;
+            enemy.element.src = `img/Gegner_${enemy.type}/Dying/Minotaur_0${enemy.type}_Dying_0${enemy.frame}.png`;
          }
          enemy.frame++;
          // Dying Animation endet bei Frame 14
@@ -214,9 +221,9 @@ function updateEnemies() {
       } else {
          // Walking Animation
          if (enemy.frame < 10) {
-            enemy.element.src = `img/Gegner/Minotaur_01/Walking/Minotaur_01_Walking_00${enemy.frame}.png`;
+            enemy.element.src = `img/Gegner_${enemy.type}/Walking/Minotaur_0${enemy.type}_Walking_00${enemy.frame}.png`;
          } else {
-            enemy.element.src = `img/Gegner/Minotaur_01/Walking/Minotaur_01_Walking_0${enemy.frame}.png`;
+            enemy.element.src = `img/Gegner_${enemy.type}/Walking/Minotaur_0${enemy.type}_Walking_0${enemy.frame}.png`;
          }
          enemy.frame++;
          if (enemy.frame == 17) {
@@ -249,7 +256,7 @@ function checkCharacterCollision() {
             pirateRect.right > enemyRect.left &&
             pirateRect.top < enemyRect.bottom &&
             pirateRect.bottom > enemyRect.top &&
-            !enemy.hit
+            !enemy.hit 
          ) {
             // Kollision erkannt
             setState('DIE'); // Setze den Zustand des Charakters auf 'DIE'
@@ -257,6 +264,8 @@ function checkCharacterCollision() {
             // Bewegung des Charakters und der Gegner stoppen
             leftArrow = false;
             rightArrow = false;
+            backgroundMusic.pause();
+            gameOverSound.play();
 
             // Gegnerbewegung stoppen
             enemies.forEach(enemy => {

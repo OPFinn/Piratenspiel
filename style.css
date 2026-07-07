@@ -10,7 +10,8 @@ body {
     top: 0;
     height: 100%;
     object-fit: cover;
-    pointer-events: none; /*empfaengt keine Mausklicks */
+    pointer-events: none;
+    /*empfaengt keine Mausklicks */
 }
 
 .character {
@@ -31,14 +32,14 @@ body {
     left: 5px;
     border-radius: 10px;
     background-color: dodgerblue;
-    Border: none;
+    border: none;
     color: black;
     font-weight: 600;
     z-index: 2;
 }
 
 #off {
-left: 80px;
+    left: 80px;
 }
 
 .enemy {
@@ -61,4 +62,17 @@ left: 80px;
     height: 35px;
     width: 15px;
 
+}
+
+#reload {
+    position: absolute;
+    top: 5px;
+    left: 200px;
+    width: 70px;
+    border-radius: 10px;
+    background-color: rgb(255, 30, 30);
+    color: black;
+    font-weight: 600;
+    z-index: 1;
+    text-align: center;
 }
